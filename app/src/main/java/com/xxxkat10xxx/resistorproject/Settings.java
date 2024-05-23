@@ -11,7 +11,7 @@ public class Settings {
     private static final String INDICATOR_SIZE = "indicator_size";
     private static final String DETECTION_MODE = "detection_mode";
     public static final boolean DEFAULT_FLASH_ENABLED = false;
-    public static final String DEFAULT_INDICATOR_SIZE = CameraViewListener.INDICATOR_SIZE_DEFAULT.name();//TODO rename
+    public static final String DEFAULT_INDICATOR_SIZE = CameraViewListener.INDICATOR_SIZE_DEFAULT.name();
 
 
 

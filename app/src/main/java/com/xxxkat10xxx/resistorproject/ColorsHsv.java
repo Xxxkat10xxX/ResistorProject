@@ -37,10 +37,10 @@ public class ColorsHsv {
     public static final Scalar WHITE_MIN = new Scalar(0, 0, 150);
     public static final Scalar WHITE_MAX = new Scalar(180, 30, 255);
 
-    public static final Scalar GOLD_MIN = new Scalar(0, 0, 0);     //// TODO:
+    public static final Scalar GOLD_MIN = new Scalar(0, 0, 0);
     public static final Scalar GOLD_MAX = new Scalar(0, 0, 0);
 
-    public static final Scalar SILVER_MIN = new Scalar(0, 0, 0);   //// TODO:
+    public static final Scalar SILVER_MIN = new Scalar(0, 0, 0);
     public static final Scalar SILVER_MAX = new Scalar(0, 0, 0);
 
     public static final Scalar UNKNOWN = new Scalar(0, 0, 0);

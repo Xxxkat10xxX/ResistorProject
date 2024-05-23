@@ -10,7 +10,7 @@ public class CameraView extends PortraitCameraView{
     public interface OnCameraInitializedCallback {
         void cameraViewInitialized();
     }
-    private OnCameraInitializedCallback onCameraInitializedCallback; //TODO rename
+    private OnCameraInitializedCallback onCameraInitializedCallback;
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
