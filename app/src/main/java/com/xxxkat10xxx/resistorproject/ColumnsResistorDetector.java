@@ -1,5 +1,13 @@
 package com.xxxkat10xxx.resistorproject;
 
+import static java.security.AccessController.getContext;
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -7,15 +15,16 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
+import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ColumnsResistorDetector extends ResistorDetector {
 
-
+    private Context context;
     private static final int NR_OF_COLUMNS_TO_COMBINE = 5;
 
     private static final int MIN_BAND_WIDTH = NR_OF_COLUMNS_TO_COMBINE + 1;
@@ -28,17 +37,25 @@ public class ColumnsResistorDetector extends ResistorDetector {
 
     private int inputMatWidth = 0;
 
-    public ColumnsResistorDetector(ResultListener resultListener) {
+    public ColumnsResistorDetector(Context current,ResultListener resultListener) {
         super(resultListener);
+        this.context=current;
     }
 
     @Override
     public void detectResistorValue(Mat resistorImage) {
         inputMatHeight = resistorImage.height();
         inputMatWidth = resistorImage.width();
-
         detectionResult = new DetectionResult();
-        detectionResult.addDetectionStepDetail(new StepDetail("original Image", resistorImage));
+        detectionResult.addDetectionStepDetail(new StepDetail("original image", resistorImage));
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.resistors_color_code);
+        Mat image = new Mat();
+        Utils.bitmapToMat(bitmap, image);
+        Mat rgbMat = new Mat();
+        Imgproc.cvtColor(image,rgbMat,Imgproc.COLOR_BGR2RGB);
+        detectionResult.addDetectionStepDetail(new StepDetail("map", rgbMat));
+        image.release();
+        rgbMat.release();
 
         applyBilateralFilter(resistorImage);
 
@@ -241,7 +258,7 @@ public class ColumnsResistorDetector extends ResistorDetector {
         Mat tmpMat2 =new Mat(tmpMat.rows(), tmpMat.cols(), tmpMat.type());
         Imgproc.cvtColor(tmpMat, tmpMat2, Imgproc.COLOR_HSV2BGR);
         Imgproc.resize(tmpMat2, tmpMat2, new Size(inputMatWidth, inputMatHeight), 0, 0, Imgproc.INTER_NEAREST);
-        detectionResult.addDetectionStepDetail(new StepDetail("Detected color per column", tmpMat2));
+        detectionResult.addDetectionStepDetail(new StepDetail("detected color per column", tmpMat2));
         tmpMat.release();
         tmpMat2.release();
 
@@ -300,7 +317,7 @@ public class ColumnsResistorDetector extends ResistorDetector {
             Mat tmpMat2 = new Mat(tmpMat.rows(), tmpMat.cols(), tmpMat.type());
             Imgproc.cvtColor(tmpMat, tmpMat2, Imgproc.COLOR_HSV2BGR);
             Imgproc.resize(tmpMat2, tmpMat2, new Size(width, inputMatHeight), 0, 0, Imgproc.INTER_NEAREST);
-            detectionResult.addDetectionStepDetail(new StepDetail("Detected color per band", tmpMat2));
+            detectionResult.addDetectionStepDetail(new StepDetail("detected color per band", tmpMat2));
             tmpMat.release();
             tmpMat2.release();
         } else {

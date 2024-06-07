@@ -18,23 +18,6 @@ public class CameraViewListener implements CameraBridgeViewBase.CvCameraViewList
         Large,
     }
 
-    public static final float CONTRAST_MODIFIER_DEFAULT = 1;
-
-    public static final float CONTRAST_MODIFIER_MIN_VALUE = 0;
-
-    public static final float CONTRAST_MODIFIER_MAX_VALUE = 2;
-
-    public static final int BRIGHTNESS_MODIFIER_DEFAULT = 0;
-
-    public static final int BRIGHTNESS_MODIFIER_MIN_VALUE = -50;
-
-    public static final int BRIGHTNESS_MODIFIER_MAX_VALUE = 50;
-
-    public static final int COLOR_MODIFIER_DEFAULT = 100;
-
-    public static final int COLOR_MODIFIER_MIN_VALUE = 0;
-
-    public static final int COLOR_MODIFIER_MAX_VALUE = 200;
 
     public static final IndicatorSize INDICATOR_SIZE_DEFAULT = IndicatorSize.Large;
 
@@ -52,22 +35,12 @@ public class CameraViewListener implements CameraBridgeViewBase.CvCameraViewList
 
     private Mat fullImageTemp;
 
-    private float contrastModifier = CONTRAST_MODIFIER_DEFAULT;
-
-    private int brightnessModifier = BRIGHTNESS_MODIFIER_DEFAULT;
-
-    private int colorModifierRed = COLOR_MODIFIER_DEFAULT;
-
-    private int colorModifierGreen = COLOR_MODIFIER_DEFAULT;
-
-    private int colorModifierBlue = COLOR_MODIFIER_DEFAULT;
-
     private IndicatorSize indicatorSize = INDICATOR_SIZE_DEFAULT;
 
     private ArrayMap<String, Rect> indicatorRects = new ArrayMap<>(IndicatorSize.values().length);
 
     public CameraViewListener() {
-        resetBrightnessAndContrastModifiers();
+        resetIndicatorSize();
     }
 
     @Override
@@ -107,22 +80,6 @@ public class CameraViewListener implements CameraBridgeViewBase.CvCameraViewList
 
         fullImage = inputFrame.rgba();
 
-        if (contrastModifier != CONTRAST_MODIFIER_DEFAULT || brightnessModifier != BRIGHTNESS_MODIFIER_DEFAULT) {
-            fullImage.convertTo(fullImage, -1, contrastModifier, brightnessModifier);
-        }
-
-
-        if (colorModifierRed != COLOR_MODIFIER_DEFAULT || colorModifierGreen != COLOR_MODIFIER_DEFAULT || colorModifierBlue != COLOR_MODIFIER_DEFAULT) {
-            float multiplierRed = (float) (colorModifierRed) / COLOR_MODIFIER_DEFAULT;
-            float multiplierGreen = (float) (colorModifierGreen) / COLOR_MODIFIER_DEFAULT;
-            float multiplierBlue = (float) (colorModifierBlue) / COLOR_MODIFIER_DEFAULT;
-            float multiplierAlpha = 1;
-
-            Scalar multiplier = new Scalar(multiplierRed, multiplierGreen, multiplierBlue, multiplierAlpha);
-
-            Core.multiply(fullImage, multiplier, fullImage);
-        }
-
         fullImage.copyTo(fullImageTemp);
 
         Rect indicator = getIndicator();
@@ -141,55 +98,10 @@ public class CameraViewListener implements CameraBridgeViewBase.CvCameraViewList
         return resistorImageRgba;
     }
 
-    public void resetBrightnessAndContrastModifiers() {
-        contrastModifier = CONTRAST_MODIFIER_DEFAULT;
-        brightnessModifier = BRIGHTNESS_MODIFIER_DEFAULT;
-
-        colorModifierRed = COLOR_MODIFIER_DEFAULT;
-        colorModifierGreen = COLOR_MODIFIER_DEFAULT;
-        colorModifierBlue = COLOR_MODIFIER_DEFAULT;
-
+    public void resetIndicatorSize() {
         indicatorSize = INDICATOR_SIZE_DEFAULT;
     }
 
-    public void setBrightnessModifier(int brightnessModifier) {
-        if (brightnessModifier < BRIGHTNESS_MODIFIER_MIN_VALUE || contrastModifier > BRIGHTNESS_MODIFIER_MAX_VALUE) {
-            throw new IllegalArgumentException("brightnessModifier must be between "
-                    + BRIGHTNESS_MODIFIER_MIN_VALUE + " and " + BRIGHTNESS_MODIFIER_MAX_VALUE);
-        }
-
-        this.brightnessModifier = brightnessModifier;
-    }
-
-    public void setContrastModifier(float contrastModifier) {
-        if (contrastModifier < CONTRAST_MODIFIER_MIN_VALUE || contrastModifier > CONTRAST_MODIFIER_MAX_VALUE) {
-            throw new IllegalArgumentException("contrastModifier must be between "
-                    + CONTRAST_MODIFIER_MIN_VALUE + " and " + CONTRAST_MODIFIER_MAX_VALUE);
-        }
-
-        this.contrastModifier = contrastModifier;
-    }
-
-    public void setColorModifiers(int red, int green, int blue) {
-        if (red < COLOR_MODIFIER_MIN_VALUE || red > COLOR_MODIFIER_MAX_VALUE) {
-            throw new IllegalArgumentException("red must be between "
-                    + COLOR_MODIFIER_MIN_VALUE + " and " + COLOR_MODIFIER_MAX_VALUE);
-        }
-
-        if (green < COLOR_MODIFIER_MIN_VALUE || green > COLOR_MODIFIER_MAX_VALUE) {
-            throw new IllegalArgumentException("gree must be between "
-                    + COLOR_MODIFIER_MIN_VALUE + " and " + COLOR_MODIFIER_MAX_VALUE);
-        }
-
-        if (blue < COLOR_MODIFIER_MIN_VALUE || blue > COLOR_MODIFIER_MAX_VALUE) {
-            throw new IllegalArgumentException("blue must be between "
-                    + COLOR_MODIFIER_MIN_VALUE + " and " + COLOR_MODIFIER_MAX_VALUE);
-        }
-
-        colorModifierRed = red;
-        colorModifierGreen = green;
-        colorModifierBlue = blue;
-    }
 
     public void setIndicatorSize(IndicatorSize size) {
         indicatorSize = size;

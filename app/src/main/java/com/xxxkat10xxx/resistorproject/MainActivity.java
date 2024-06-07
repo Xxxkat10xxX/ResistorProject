@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if(binding.mode1.isChecked()){
-                    resistorDetector = new ColumnsResistorDetector(resultListener);
+                    resistorDetector = new ColumnsResistorDetector(getBaseContext(),resultListener);
                 }
                 if(binding.mode2.isChecked()){
                     resistorDetector = new ContoursModResistorDetector(resultListener);
@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadCameraListenerSettings() {
-        CameraViewListener.IndicatorSize indicatorSize = settings.getIndicatoreSize();
+        CameraViewListener.IndicatorSize indicatorSize = settings.getIndicatorSize();
         cameraViewListener.setIndicatorSize(indicatorSize);
 
     }
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadDetictoinSettings() {
 
         if(binding.mode1.isChecked()){
-            resistorDetector = new ColumnsResistorDetector(resultListener);
+            resistorDetector = new ColumnsResistorDetector(getBaseContext(),resultListener);
         }
         if(binding.mode2.isChecked()){
             resistorDetector = new ContoursModResistorDetector(resultListener);

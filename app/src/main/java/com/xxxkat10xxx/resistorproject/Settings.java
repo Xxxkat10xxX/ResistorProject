@@ -31,7 +31,7 @@ public class Settings {
         setPreferencesString(INDICATOR_SIZE, indicatorSize.name());
     }
 
-    public CameraViewListener.IndicatorSize getIndicatoreSize() {
+    public CameraViewListener.IndicatorSize getIndicatorSize() {
         String indicatorSizeString = myPreferences.getString(INDICATOR_SIZE, DEFAULT_INDICATOR_SIZE);
 
         return CameraViewListener.IndicatorSize.valueOf(indicatorSizeString);
